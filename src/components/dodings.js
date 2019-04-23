@@ -1,8 +1,8 @@
-import React from 'react';
+import React,{Component} from 'react';
 import Pagination from './Pagination';
 import { Link } from 'react-router-dom';
 
-class Dodings extends React.Component {
+class Dodings extends Component {
     state = {
         dodings:[],
         currentDodings:[],
