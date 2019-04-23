@@ -75,7 +75,7 @@ class Dodings extends Component {
                     <div className="d-flex flex-row py-4 align-items-center">
                         <Pagination
                         totalRecords={totalDodings}
-                        pageLimit={18}
+                        pageLimit={20}
                         pageNeighbours={1}
                         onPageChanged={this.onPageChanged}
                         />
