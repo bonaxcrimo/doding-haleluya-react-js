@@ -1,5 +1,6 @@
 import React from 'react';
 import Pagination from './Pagination';
+import { Link } from 'react-router-dom';
 
 class Dodings extends React.Component {
     state = {
@@ -13,7 +14,7 @@ class Dodings extends React.Component {
         this.headers = [
             { key: 'no', label: 'No'},
             { key: 'kategori', label: 'Kategori' },
-            { key: 'judul', label: 'judul' }
+            { key: 'judul', label: 'Judul' }
         ];
     }
 
@@ -80,7 +81,7 @@ class Dodings extends React.Component {
                         />
                     </div>
                 </div>
-                <table>
+                <table className="table table-bordered table-striped">
                     <thead>
                         <tr>
                         {
@@ -90,7 +91,7 @@ class Dodings extends React.Component {
                                 )
                             })
                         }
-                          <th>Actions</th>
+                          <th>#</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -101,7 +102,8 @@ class Dodings extends React.Component {
                                   <td>{item.no}</td>
                                   <td>{item.kategori}</td>
                                   <td>{item.judul}</td>
-                                  <td>
+                                  <td style={{width:'100px'}}>
+                                   <Link to={`/detail/${item.no}`} className="btn btn-dark btn-block">Detail</Link>
                                   </td>
                                 </tr>
                                             )
