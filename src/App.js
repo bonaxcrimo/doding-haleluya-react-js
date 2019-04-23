@@ -8,7 +8,7 @@ function App() {
     <Router>
       <div>
         <Route exact path='/' component={Dodings}/>
-         <Route exact path='/detail/:no' component={DetailDoding}/>
+        <Route exact path='/detail/:no' component={DetailDoding}/>
       </div>
     </Router>
   );

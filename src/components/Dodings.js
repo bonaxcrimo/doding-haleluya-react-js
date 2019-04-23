@@ -7,15 +7,8 @@ class Dodings extends Component {
         dodings:[],
         currentDodings:[],
         currentPage:null,
-        totalPages:null
-    }
-    constructor(props) {
-        super(props);
-        this.headers = [
-            { key: 'no', label: 'No'},
-            { key: 'kategori', label: 'Kategori' },
-            { key: 'judul', label: 'Judul' }
-        ];
+        totalPages:null,
+        loading:true
     }
 
     componentDidMount() {
@@ -23,9 +16,9 @@ class Dodings extends Component {
             .then(response => {
                 return response.json();
             }).then(result => {
-                console.log(result);
                 this.setState({
-                    dodings:result
+                    dodings:result,
+                    loading:false
                 });
             });
     }
@@ -46,73 +39,85 @@ class Dodings extends Component {
             dodings,
             currentDodings,
             currentPage,
-            totalPages
+            totalPages,
+            loading
         } = this.state;
+        const headers = [
+            { key: 'no', label: 'No'},
+            { key: 'kategori', label: 'Kategori' },
+            { key: 'judul', label: 'Judul' }
+        ];
         const totalDodings = dodings.length;
         if(totalDodings===0) return null;
         const headerClass = [
             'text-dark py-2 pr-4 m-0',
             currentPage?'border-gray border-right':''
         ].join(' ').trim();
-
-        return (
-        <div className="container mb-5">
-            <div className="row d-flex flex-row py-5">
-                <div className="w-100 px-4 py-5 d-flex flex-row flex-wrap align-items-center justify-content-between">
-                    <div className="d-flex flex-row align-items-center">
-                        <h2 className={headerClass}>
-                            <strong className="text-secondary">{totalDodings}</strong>{' '}
-                            Dodings
-                        </h2>
-                        {
-                            currentPage && (
-                            <span className="current-page d-inline-block h-100 pl-4 text-secondary">
-                                Page <span className="font-weight-bold">{currentPage}</span> / {' '}
-                                <span className="font-weight-bold">{totalPages}</span>
-                            </span>
-                        )}
+        let content;
+        if(loading){
+            content= <div>Loading....</div>;
+        }else{
+            content =  <div className="row d-flex flex-row py-5">
+                    <div className="w-100 px-4 py-5 d-flex flex-row flex-wrap align-items-center justify-content-between">
+                        <div className="d-flex flex-row align-items-center">
+                            <h2 className={headerClass}>
+                                <strong className="text-secondary">{totalDodings}</strong>{' '}
+                                Dodings
+                            </h2>
+                            {
+                                currentPage && (
+                                <span className="current-page d-inline-block h-100 pl-4 text-secondary">
+                                    Page <span className="font-weight-bold">{currentPage}</span> / {' '}
+                                    <span className="font-weight-bold">{totalPages}</span>
+                                </span>
+                            )}
+                        </div>
+                        <div className="d-flex flex-row py-4 align-items-center">
+                            <Pagination
+                            totalRecords={totalDodings}
+                            pageLimit={20}
+                            pageNeighbours={1}
+                            onPageChanged={this.onPageChanged}
+                            />
+                        </div>
                     </div>
-                    <div className="d-flex flex-row py-4 align-items-center">
-                        <Pagination
-                        totalRecords={totalDodings}
-                        pageLimit={20}
-                        pageNeighbours={1}
-                        onPageChanged={this.onPageChanged}
-                        />
-                    </div>
-                </div>
-                <table className="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                        {
-                            this.headers.map(function(h) {
+                    <table className="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                            {
+                                headers.map(function(h) {
+                                    return (
+                                        <th key = {h.key}>{h.label}</th>
+                                    )
+                                })
+                            }
+                              <th>#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                               currentDodings.map(function(item, key) {
                                 return (
-                                    <th key = {h.key}>{h.label}</th>
-                                )
-                            })
-                        }
-                          <th>#</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                           currentDodings.map(function(item, key) {
-                            return (
-                                <tr key = {key}>
-                                  <td>{item.no}</td>
-                                  <td>{item.kategori}</td>
-                                  <td>{item.judul}</td>
-                                  <td style={{width:'100px'}}>
-                                   <Link to={`/detail/${item.no}`} className="btn btn-dark btn-block">Detail</Link>
-                                  </td>
-                                </tr>
-                                            )
-                            }.bind(this))
-                        }
-                    </tbody>
-                </table>
+                                    <tr key = {key}>
+                                      <td>{item.no}</td>
+                                      <td>{item.kategori}</td>
+                                      <td>{item.judul}</td>
+                                      <td style={{width:'100px'}}>
+                                       <Link to={`/detail/${item.no}`} className="btn btn-dark btn-block">Detail</Link>
+                                      </td>
+                                    </tr>
+                                                )
+                                }.bind(this))
+                            }
+                        </tbody>
+                    </table>
+                </div>;
+
+        }
+        return (
+            <div className="container mb-5">
+                {content}
             </div>
-        </div>
         )
     }
 }

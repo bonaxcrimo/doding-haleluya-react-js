@@ -5,7 +5,8 @@ class DetailDoding extends Component {
         no:'',
         kategori:'',
         judul:'',
-        lirik:''
+        lirik:'',
+        loading:true
     }
     componentDidMount(){
         fetch('https://moonshiny-stakes.000webhostapp.com/doding/doding?no=' + this.props.match.params.no)
@@ -17,17 +18,20 @@ class DetailDoding extends Component {
                 no:result.no,
                 kategori:result.kategori,
                 judul:result.judul,
-                lirik:result.lirik
+                lirik:result.lirik,
+                loading:false
             });
         });
     }
     render(){
         const {
-            judul,kategori,lirik,no
+            judul,kategori,lirik,no,loading
         } = this.state;
-        return(
-        <div className="container mb-5">
-            <div className="row d-flex flex-lg-row py-5 justify-content-center">
+        let content;
+        if(loading){
+            content = <div>Loading....</div>;
+        }else{
+            content = <div className="row d-flex flex-lg-row py-5 justify-content-center">
                 <div className="mr-auto">
                     <Link to={`/`} className="btn btn-warning">Kembali</Link>
                 </div>
@@ -48,7 +52,11 @@ class DetailDoding extends Component {
                 <div className="ml-auto">
                 Same Category
                 </div>
-            </div>
+            </div>;
+        }
+        return(
+        <div className="container mb-5">
+            {content}
         </div>
         )
     }
