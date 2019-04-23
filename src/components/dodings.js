@@ -19,7 +19,7 @@ class Dodings extends Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:81/ciApi/doding/dodings')
+        fetch('https://moonshiny-stakes.000webhostapp.com/doding/dodings')
             .then(response => {
                 return response.json();
             }).then(result => {

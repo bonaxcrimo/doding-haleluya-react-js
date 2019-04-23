@@ -8,7 +8,7 @@ class DetailDoding extends Component {
         lirik:''
     }
     componentDidMount(){
-        fetch('http://localhost:81/ciApi/doding/doding?no=' + this.props.match.params.no)
+        fetch('https://moonshiny-stakes.000webhostapp.com/doding/doding?no=' + this.props.match.params.no)
         .then(response => {
             return response.json();
         }).then(result => {
