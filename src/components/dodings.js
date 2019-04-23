@@ -1,9 +1,15 @@
 import React from 'react';
+import Pagination from './Pagination';
 
 class Dodings extends React.Component {
+    state = {
+        dodings:[],
+        currentDodings:[],
+        currentPage:null,
+        totalPages:null
+    }
     constructor(props) {
         super(props);
-        this.state = {dodings: []};
         this.headers = [
             { key: 'no', label: 'No'},
             { key: 'kategori', label: 'Kategori' },
@@ -22,12 +28,58 @@ class Dodings extends React.Component {
                 });
             });
     }
+    onPageChanged = data => {
+        const { dodings } = this.state;
+        const { currentPage, totalPages, pageLimit } = data;
+
+        const offset = (currentPage - 1) * pageLimit;
+        const currentDodings = dodings.slice(offset, offset + pageLimit);
+
+        this.setState({ currentPage, currentDodings, totalPages });
+    };
 
 
 
     render() {
+        const {
+            dodings,
+            currentDodings,
+            currentPage,
+            totalPages
+        } = this.state;
+        const totalDodings = dodings.length;
+        if(totalDodings===0) return null;
+        const headerClass = [
+            'text-dark py-2 pr-4 m-0',
+            currentPage?'border-gray border-right':''
+        ].join(' ').trim();
+
         return (
-            <div id="container">
+        <div className="container mb-5">
+            <div className="row d-flex flex-row py-5">
+                <div className="w-100 px-4 py-5 d-flex flex-row flex-wrap align-items-center justify-content-between">
+                    <div className="d-flex flex-row align-items-center">
+                        <h2 className={headerClass}>
+                            <strong className="text-secondary">{totalDodings}</strong>{' '}
+                            Dodings
+                        </h2>
+                        {
+                            currentPage && (
+                            <span className="current-page d-inline-block h-100 pl-4 text-secondary">
+                                Page <span className="font-weight-bold">{currentPage}</span> / {' '}
+                                <span className="font-weight-bold">{totalPages}</span>
+                            </span>
+                        )}
+                    </div>
+                    <div className="d-flex flex-row py-4 align-items-center">
+                        <Pagination
+                        totalRecords={totalDodings}
+                        pageLimit={18}
+                        pageNeighbours={1}
+                        onPageChanged={this.onPageChanged}
+                        />
+                    </div>
+                </div>
                 <table>
                     <thead>
                         <tr>
@@ -43,7 +95,7 @@ class Dodings extends React.Component {
                     </thead>
                     <tbody>
                         {
-                            this.state.dodings.map(function(item, key) {
+                           currentDodings.map(function(item, key) {
                             return (
                                 <tr key = {key}>
                                   <td>{item.no}</td>
@@ -58,6 +110,7 @@ class Dodings extends React.Component {
                     </tbody>
                 </table>
             </div>
+        </div>
         )
     }
 }
